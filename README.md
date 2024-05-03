@@ -13,14 +13,14 @@ To get started with the Family Cash Card app, follow these steps:
     cd cashcard
     ```
 
-2. **Dependencies**: Ensure you have Java JDK, Maven, and Spring Boot installed on your system.
+2. **Dependencies**: Ensure you have Java JDK, Gradle, and Spring Boot installed on your system.
 
 3. **Database Setup**: The app utilizes a database to store cash card information. You can configure the database settings in the `application.properties` file.
 
-4. **Build and Run**: Use Maven to build and run the application.
+4. **Build and Run**: Use Gradle to build and run the application.
 
     ```bash
-    mvn spring-boot:run
+    ./gradlew clean build  
     ```
 
 5. **Access the App**: Once the app is running, you can access it through your web browser at `http://localhost:8080`.
@@ -45,7 +45,7 @@ The Family Cash Card app is built using the following technologies:
 
 - **Spring Boot**: For rapid application development and dependency injection.
   
-- **Maven**: For project management and dependency resolution.
+- **Gradle**: For project management and dependency resolution.
   
 - **MySQL (or other compatible database)**: For storing cash card information securely.
 
