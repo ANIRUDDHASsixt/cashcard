@@ -1,5 +1,7 @@
-package example.cashcard;
+package example.cashcard.adapter.handler.rest.controller;
 
+import example.cashcard.adapter.persistance.CashCardRepository;
+import example.cashcard.domain.cashCard.CashCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +57,6 @@ class CashCardController {
 
     @PutMapping("/{requestedId}")
     private ResponseEntity<Void> putCashCard(@PathVariable Long requestedId, @RequestBody CashCard cashCardUpdate, Principal principal) {
-        // just return 204 NO CONTENT for now.
         CashCard cashCard = findCashCard(requestedId, principal);
         if (cashCard != null) {
             CashCard updatedcashCard = new CashCard(cashCard.id(), cashCardUpdate.amount(), principal.getName());
