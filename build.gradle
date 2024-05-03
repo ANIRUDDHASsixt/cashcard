@@ -48,7 +48,7 @@ checkstyleMain.source = "src/main/java"
 test.finalizedBy jacocoTestReport
 
 // Code quality tasks
-task quality() {
+tasks.register('quality') {
     dependsOn "checkstyleMain", "spotbugsMain"
 }
 test.dependsOn quality
@@ -97,3 +97,34 @@ jacocoTestReport {
                 }))
     }
 }
+
+
+//sourceSets.main.java.srcDirs = ['build/generated/src/main/java', 'src/main/java', 'build/proto', 'build/generated/source/proto/main']
+//
+///*********************
+// * OpenAPI Model Generation Tasks
+// *********************/
+//openApiGenerate {
+//    generatorName = "spring"
+//    library = "spring-boot"
+//    inputSpec = "$rootDir/documentation/OpenAPISpec/Digital-Checkout-Vehicle-Selection.yaml".toString()
+//    outputDir = "$buildDir/generated".toString()
+//    apiPackage = "com.sixt.service.digital_checkout.domain.api"
+//    modelPackage = "com.sixt.service.digital_checkout.domain.contract"
+//    templateDir = "$rootDir/src/main/resources/openapi-custom-template"
+//    configOptions.set([
+//            booleanGetterPrefix    : "is",
+//            hideGenerationTimestamp: "true",
+//            dateLibrary            : "java8",
+//            // DelegatePattern attribute will work only when interfaceOnly attribute is set to false
+//            delegatePattern        : "true",
+//            openApiNullable        : "true",
+//            interfaceOnly          : "false",
+//            useSpringController    : "true",
+//            useSpringBoot3         : "true",
+//            useTags                : "true"
+//    ])
+//}
+//
+//tasks.openApiGenerate.dependsOn generateProto
+//tasks.compileJava.dependsOn tasks.openApiGenerate
