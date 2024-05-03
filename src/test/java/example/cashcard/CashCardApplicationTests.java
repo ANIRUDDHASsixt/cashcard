@@ -2,7 +2,7 @@ package example.cashcard;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import example.cashcard.domain.cashCard.CashCard;
+import example.cashcard.domain.cashcard.CashCard;
 import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

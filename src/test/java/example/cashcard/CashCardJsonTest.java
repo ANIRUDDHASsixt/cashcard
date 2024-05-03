@@ -1,7 +1,7 @@
 package example.cashcard;
 
 
-import example.cashcard.domain.cashCard.CashCard;
+import example.cashcard.domain.cashcard.CashCard;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
