@@ -1,4 +1,4 @@
-package example.cashcard.domain.cashCard;
+package example.cashcard.domain.cashcard;
 
 import org.springframework.data.annotation.Id;
 

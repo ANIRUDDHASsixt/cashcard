@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.4'
     id "com.github.spotbugs" version "5.1.3"
     id "jacoco"
+    id "checkstyle"
 }
 
 group = 'example'
@@ -28,7 +29,29 @@ dependencies {
  * Build SpotBugs
  */
 apply from: 'gradle/build.spotbugs.gradle'
+
+/**
+ * Code quality
+ **/
+checkstyle {
+    ignoreFailures = false
+    maxErrors = 0
+    maxWarnings = 0
+    toolVersion = "9.2"
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/checkstyle")
+    configFile = file("$project.rootDir/config/checkstyle/checkstyle.xml")
+}
+
+checkstyleMain.source = "src/main/java"
+
 test.finalizedBy jacocoTestReport
+
+// Code quality tasks
+task quality() {
+    dependsOn "checkstyleMain", "spotbugsMain"
+}
+test.dependsOn quality
 /**
  * Tests
  */
