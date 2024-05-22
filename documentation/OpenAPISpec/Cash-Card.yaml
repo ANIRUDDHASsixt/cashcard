@@ -10,6 +10,7 @@ servers:
   - url: /cashcards
 tags:
   - name: Cash Card Management
+
 paths:
   /{requestedId}:
     get:
@@ -24,15 +25,25 @@ paths:
           schema:
             type: integer
       responses:
-        "200":
+        200:
           description: Successful operation
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/CashCard'
-        "404":
-          description: Cash Card not found
+        404:
+          description: |-
+            HTTP errors may have one of the following error codes:
+            - `PAGE_NOT_FOUND` - The page was not found.
+            - `CASH CARD NOT FOUND` - Cash Card not found.
           content: {}
+        default:
+          description: HTTP errors are represented in the following format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpError'
+
     put:
       tags:
         - Cash Card Management
@@ -48,17 +59,24 @@ paths:
         description: Updated Cash Card object
         required: true
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/CashCard'
       responses:
-        "204":
+        204:
           description: No Content
           content: {}
-        "404":
+        404:
           description: Cash Card not found
           content: {}
+        default:
+          description: HTTP errors are represented in the following format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpError'
       x-codegen-request-body-name: cashCardUpdate
+
   /:
     get:
       tags:
@@ -81,14 +99,21 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        200:
           description: Successful operation
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/CashCard'
+        default:
+          description: HTTP errors are represented in the following format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpError'
+
     post:
       tags:
         - Cash Card Management
@@ -101,13 +126,20 @@ paths:
             schema:
               $ref: '#/components/schemas/CashCard'
       responses:
-        "201":
+        201:
           description: Created
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/CashCard'
+        default:
+          description: HTTP errors are represented in the following format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpError'
       x-codegen-request-body-name: newCashCardRequest
+
 components:
   schemas:
     CashCard:
@@ -125,4 +157,26 @@ components:
       required:
         - amount
         - owner
+
+    HttpError:
+      type: object
+      properties:
+        data:
+          type: object
+          properties: { }
+          description: interface for adding additional information with arbitary format
+        errorCode:
+          type: string
+          description: the unique error code  (e.g. 'user_not_found')
+        message:
+          type: string
+          description: human readable error message (e.g. 'The requested user could
+            not be found')
+        retriable:
+          type: boolean
+          description: indicates if the client might perform a retry for the request
+            causing the error
+        title:
+          type: string
+          description: human readable error title (e.g. 'Not Found')
 
