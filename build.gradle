@@ -5,6 +5,7 @@ plugins {
     id "com.github.spotbugs" version "5.1.3"
     id "jacoco"
     id "checkstyle"
+    id 'org.openapi.generator' version "7.0.0"
 }
 
 group = 'example'
@@ -24,7 +25,39 @@ dependencies {
     implementation 'org.springframework.data:spring-data-jdbc'
     implementation 'com.h2database:h2'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    implementation 'io.swagger:swagger-annotations:1.6.8'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
 }
+
+sourceSets.main.java.srcDirs = ['build/generated/src/main/java', 'src/main/java', 'build/proto', 'build/generated/source/proto/main']
+
+/*********************
+ * OpenAPI Model Generation Tasks
+ *********************/
+openApiGenerate {
+    generatorName = "spring"
+    library = "spring-boot"
+    inputSpec = "$rootDir/documentation/OpenAPISpec/Cash-Card.yaml".toString()
+    outputDir = "$buildDir/generated".toString()
+    apiPackage = "com.service.cashcard.domain.api"
+    modelPackage = "com.service.cashcard.domain.contract"
+    templateDir = "$rootDir/src/main/resources/openapi-custom-template"
+    configOptions.set([
+            booleanGetterPrefix    : "is",
+            hideGenerationTimestamp: "true",
+            dateLibrary            : "java8",
+            // DelegatePattern attribute will work only when interfaceOnly attribute is set to false
+            delegatePattern        : "true",
+            openApiNullable        : "true",
+            interfaceOnly          : "false",
+            useSpringController    : "true",
+            useSpringBoot3         : "true",
+            useTags                : "true"
+    ])
+}
+
+tasks.compileJava.dependsOn tasks.openApiGenerate
 /**
  * Build SpotBugs
  */
@@ -97,34 +130,3 @@ jacocoTestReport {
                 }))
     }
 }
-
-
-//sourceSets.main.java.srcDirs = ['build/generated/src/main/java', 'src/main/java', 'build/proto', 'build/generated/source/proto/main']
-//
-///*********************
-// * OpenAPI Model Generation Tasks
-// *********************/
-//openApiGenerate {
-//    generatorName = "spring"
-//    library = "spring-boot"
-//    inputSpec = "$rootDir/documentation/OpenAPISpec/Digital-Checkout-Vehicle-Selection.yaml".toString()
-//    outputDir = "$buildDir/generated".toString()
-//    apiPackage = "com.sixt.service.digital_checkout.domain.api"
-//    modelPackage = "com.sixt.service.digital_checkout.domain.contract"
-//    templateDir = "$rootDir/src/main/resources/openapi-custom-template"
-//    configOptions.set([
-//            booleanGetterPrefix    : "is",
-//            hideGenerationTimestamp: "true",
-//            dateLibrary            : "java8",
-//            // DelegatePattern attribute will work only when interfaceOnly attribute is set to false
-//            delegatePattern        : "true",
-//            openApiNullable        : "true",
-//            interfaceOnly          : "false",
-//            useSpringController    : "true",
-//            useSpringBoot3         : "true",
-//            useTags                : "true"
-//    ])
-//}
-//
-//tasks.openApiGenerate.dependsOn generateProto
-//tasks.compileJava.dependsOn tasks.openApiGenerate

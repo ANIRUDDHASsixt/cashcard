@@ -1,0 +1,182 @@
+openapi: 3.0.1
+info:
+  title: Cash Card Management API
+  description: API for managing cash cards
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: /cashcards
+tags:
+  - name: Cash Card Management
+
+paths:
+  /{requestedId}:
+    get:
+      tags:
+        - Cash Card Management
+      summary: Find Cash Card by ID
+      parameters:
+        - name: requestedId
+          in: path
+          description: ID of the Cash Card to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashCard'
+        404:
+          description: |-
+            HTTP errors may have one of the following error codes:
+            - `PAGE_NOT_FOUND` - The page was not found.
+            - `CASH CARD NOT FOUND` - Cash Card not found.
+          content: {}
+        default:
+          description: HTTP errors are represented in the following format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpError'
+
+    put:
+      tags:
+        - Cash Card Management
+      summary: Update Cash Card by ID
+      parameters:
+        - name: requestedId
+          in: path
+          description: ID of the Cash Card to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Updated Cash Card object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashCard'
+      responses:
+        204:
+          description: No Content
+          content: {}
+        404:
+          description: Cash Card not found
+          content: {}
+        default:
+          description: HTTP errors are represented in the following format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpError'
+      x-codegen-request-body-name: cashCardUpdate
+
+  /:
+    get:
+      tags:
+        - Cash Card Management
+      summary: Find All Cash Cards
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+        - name: size
+          in: query
+          description: Page size
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: "Sort by a specific field (e.g., amount)"
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CashCard'
+        default:
+          description: HTTP errors are represented in the following format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpError'
+
+    post:
+      tags:
+        - Cash Card Management
+      summary: Create a new Cash Card
+      requestBody:
+        description: New Cash Card object
+        required: true
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CashCard'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashCard'
+        default:
+          description: HTTP errors are represented in the following format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpError'
+      x-codegen-request-body-name: newCashCardRequest
+
+components:
+  schemas:
+    CashCard:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          nullable: true
+        amount:
+          type: number
+          format: double
+        owner:
+          type: string
+      required:
+        - amount
+        - owner
+
+    HttpError:
+      type: object
+      properties:
+        data:
+          type: object
+          properties: { }
+          description: interface for adding additional information with arbitary format
+        errorCode:
+          type: string
+          description: the unique error code  (e.g. 'user_not_found')
+        message:
+          type: string
+          description: human readable error message (e.g. 'The requested user could
+            not be found')
+        retriable:
+          type: boolean
+          description: indicates if the client might perform a retry for the request
+            causing the error
+        title:
+          type: string
+          description: human readable error title (e.g. 'Not Found')
+
